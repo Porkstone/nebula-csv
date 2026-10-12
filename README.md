@@ -31,7 +31,7 @@ pnpm start
 pnpm dist:win
 ```
 
-The Windows x64 installer is produced in `release/`. The installer is unsigned unless a signing certificate is configured in the build environment.
+The Windows x64 installer is produced as `release/nebula-csv-viewer.exe`. The installed application is also named `nebula-csv-viewer.exe`. The installer is unsigned unless a signing certificate is configured in the build environment.
 
 See [validation notes](docs/TESTING.md) for automated and Windows computer-use test coverage.
 

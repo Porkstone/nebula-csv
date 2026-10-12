@@ -17,6 +17,7 @@ import {
   Filter,
 } from "lucide-react";
 import { parseCsv, selectRows } from "./csv";
+import { version } from "../package.json";
 import type { Dataset, Sort } from "./csv";
 declare global {
   interface Window {
@@ -553,7 +554,7 @@ export default function App() {
         </section>
         <footer>
           <span>
-            Nebula CSV Viewer <span className="version">v1.0.0</span>
+            Nebula CSV Viewer <span className="version">v{version}</span>
           </span>
           <span>
             <ShieldCheck size={13} />

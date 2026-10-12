@@ -1,7 +1,7 @@
 {
   "name": "nebula-csv",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "electron/main.cjs",
   "description": "A private, local CSV viewer with column visibility, sorting and filtering",
   "author": "Porkstone",
@@ -21,7 +21,8 @@
     ],
     "win": {
       "target": "nsis",
-      "artifactName": "nebula-csv-setup-${version}.${ext}",
+      "executableName": "nebula-csv-viewer",
+      "artifactName": "nebula-csv-viewer.${ext}",
       "icon": "build/icon.ico"
     },
     "nsis": {

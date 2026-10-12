@@ -1,7 +1,8 @@
-param([string]$Version = '1.0.0')
+param([string]$Version)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
-$installer = Join-Path $root "release/nebula-csv-setup-$Version.exe"
+if (-not $Version) { $Version = (Get-Content -LiteralPath (Join-Path $root 'package.json') -Raw | ConvertFrom-Json).version }
+$installer = Join-Path $root 'release/nebula-csv-viewer.exe'
 $checksum = (Get-FileHash -LiteralPath $installer -Algorithm SHA256).Hash
 $tools = Join-Path $root 'chocolatey/tools'
 New-Item -ItemType Directory -Path $tools -Force | Out-Null
@@ -11,7 +12,7 @@ if (Get-OSArchitectureWidth -Compare 32) { throw 'Nebula CSV Viewer requires 64-
 $packageArgs = @{
   packageName    = 'nebula-csv'
   fileType       = 'exe'
-  url64bit       = 'https://github.com/porkstone/nebula-csv/releases/download/v__VERSION__/nebula-csv-setup-__VERSION__.exe'
+  url64bit       = 'https://github.com/porkstone/nebula-csv/releases/download/v__VERSION__/nebula-csv-viewer.exe'
   checksum64     = '__CHECKSUM__'
   checksumType64 = 'sha256'
   silentArgs     = '/S /allusers'

@@ -36,4 +36,12 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 
 ## Scope and limitations
 
+## Version 1.0.1 executable rename
+
+- TypeScript and production build passed with the version read from package metadata.
+- Built the Windows app and installer with the filename `nebula-csv-viewer.exe`.
+- Computer-use confirmed that the renamed packaged application launches, displays version 1.0.1, and previews the bundled CSV sample.
+
+## Scope and limitations
+
 Windows x64 is the release target. macOS and Linux installers have not been tested. The native Windows file picker may retain the Windows shell appearance even when the application uses Dark mode. The app does not claim full WCAG certification. The installer is unsigned. Parsing and filtering are in memory, with a 50 MB input limit; maximum-size performance is not benchmarked.
