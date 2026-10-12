@@ -49,6 +49,8 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Production build and Windows installer packaging passed.
 - Computer-use confirmed removal of the Local workspace overline, CSV preview title, and introductory description in the empty view and sample CSV view.
 - Verified that Open CSV remains available and that the table, pagination controls, and footer fit cleanly at the default window size.
+- Local Chocolatey upgrade to 1.0.2 succeeded with a verified installer checksum. Computer-use confirmed the introductory section is absent from the installed application.
+- GitHub release 1.0.2 is published and CI passed. Community Chocolatey submission still returns HTTP 403.
 
 ## Scope and limitations
 
