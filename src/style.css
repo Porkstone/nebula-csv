@@ -199,6 +199,69 @@ header {
   gap: 16px;
   flex-shrink: 0;
 }
+.file-tabs {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  padding: 12px 36px 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  scrollbar-width: thin;
+}
+.file-tab {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  max-width: 260px;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: 8px 8px 0 0;
+  color: var(--muted);
+}
+.file-tab:hover {
+  background: var(--hover);
+}
+.file-tab.active {
+  background: var(--selected);
+  color: var(--cyan);
+  border-color: var(--border);
+  border-bottom-color: var(--cyan);
+}
+.file-tab-label {
+  min-width: 0;
+  padding: 11px 10px 11px 13px;
+  font-size: 13px;
+}
+.file-tab-label svg {
+  flex-shrink: 0;
+}
+.file-tab-label span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.close-tab {
+  flex-shrink: 0;
+  padding: 5px;
+  margin-right: 7px;
+  border-radius: 4px;
+}
+.close-tab:hover {
+  background: var(--pressed);
+  color: var(--text);
+}
+.file-tab button:focus-visible {
+  outline-offset: -3px;
+}
+main:has(.file-tabs) .table-scroll {
+  max-height: max(240px, calc(100vh - 540px));
+}
+@media (max-width: 1050px) {
+  .file-tabs {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
 .eyebrow {
   font-size: 12px;
   letter-spacing: 1.8px;

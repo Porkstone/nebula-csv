@@ -4,7 +4,7 @@ Tested on Windows on 12 October 2026.
 
 ## Automated checks
 
-`pnpm test`: 15 tests passed (7 CSV/view tests and 8 Electron file tests). Covers UTF-8 BOM, quoted commas, escaped quotes, multiline fields, tabs, semicolons, irregular rows, duplicate headers, empty input, header-only input, numeric sorting, source preservation, combined case-insensitive filters, restoration of original order, file arguments with spaces/Unicode, launching directories, extension validation, UTF-8 reads, missing files, directories, and the 50 MB limit.
+`pnpm test`: 23 tests passed (7 CSV/view tests, 6 tab tests, and 10 Electron file tests). Covers UTF-8 BOM, quoted commas, escaped quotes, multiline fields, tabs, semicolons, irregular rows, duplicate headers, empty input, header-only input, numeric sorting, source preservation, combined case-insensitive filters, restoration of original order, file arguments with spaces/Unicode, launching directories, extension validation, UTF-8 reads, missing files, directories, and the 50 MB limit. Tab tests cover appending files, duplicate filenames, independent view settings, resetting one tab, closing background/active/last tabs, and stale selections. Multi-file launch and partial read failure are also covered.
 
 `pnpm build`: TypeScript and Vite production build passed.
 
@@ -71,6 +71,15 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Development Electron launches also passed filename-with-spaces and second-instance handoff checks.
 - GitHub release 1.0.4 is published and CI passed. Local Chocolatey upgrade to 1.0.4 downloaded the published installer, verified SHA-256, and succeeded; the installed app loaded the spaced filename correctly. Registry commands and unchanged CSV defaults were checked again after upgrade.
 - The 1.0.4 community Chocolatey submission returned HTTP 403. The monitoring task now tracks this release and preserves the Explorer integration requirements.
+
+## Version 1.0.5 multiple CSV tabs
+
+- All 23 automated tests and the production build passed.
+- Computer-use verified a cold launch with two CSV paths, including a filename with spaces. Both appeared in separate tabs.
+- Applied Amount sorting, a City filter, and hidden City in `qa.csv`; the second tab retained its unfiltered view. Switching back restored the first tab's settings and column panel.
+- The native multi-select picker appended `qa.csv` and `pagination.csv` together. Duplicate filenames remained independently usable.
+- Pagination remained on page 2 after switching away and back. Closing a background tab preserved the active preview; Ctrl+W selected an adjacent tab and closing the final tab returned to the empty view.
+- Windows NSIS packaging and machine-wide installation passed. Computer-use verified Explorer **Open with → nebula-csv** cold launch and a second Explorer file opening as a new tab in the same installed window, preserving the original preview.
 
 ## Scope and limitations
 

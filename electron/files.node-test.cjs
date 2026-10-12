@@ -5,6 +5,8 @@ const path = require("node:path");
 const os = require("node:os");
 const {
   fileFromArguments,
+  filesFromArguments,
+  fileOpenResult,
   readCsvFile,
   MAX_FILE_SIZE,
 } = require("./files.cjs");
@@ -41,6 +43,25 @@ test("ignores Electron flags and unrelated files", () => {
 test("keeps an absolute path intact when a second instance has a different cwd", () => {
   const filename = path.join(root, "qa.csv");
   assert.equal(fileFromArguments([filename], os.tmpdir()), filename);
+});
+test("keeps every file in a multi-file launch, in order", () => {
+  assert.deepEqual(
+    filesFromArguments(
+      ["--flag", "first.csv", "two files.CSV", "skip.png"],
+      root,
+    ),
+    [path.join(root, "first.csv"), path.join(root, "two files.CSV")],
+  );
+});
+test("one failed file does not reject the other file-open results", async () => {
+  const filename = path.join(root, "valid.csv");
+  await fs.writeFile(filename, "A,B\n1,2");
+  const results = await Promise.all([
+    fileOpenResult(path.join(root, "missing.csv")),
+    fileOpenResult(filename),
+  ]);
+  assert.match(results[0].error, /missing.csv.*no longer exists/);
+  assert.equal(results[1].file.name, "valid.csv");
 });
 test("reads UTF-8 data and preserves the filename for the renderer", async () => {
   const filename = path.join(root, "team résumé.csv");

@@ -7,15 +7,16 @@ const {
   nativeTheme,
 } = require("electron");
 const path = require("node:path");
-const { fileFromArguments, readCsvFile } = require("./files.cjs");
+const { filesFromArguments, fileOpenResult } = require("./files.cjs");
 let mainWindow;
 let rendererReady = false;
 let externalReadId = 0;
-const startupFile = fileFromArguments(
+let deliveringExternalFiles = false;
+const startupFiles = filesFromArguments(
   process.argv.slice(app.isPackaged ? 1 : 2),
   process.cwd(),
 );
-let pendingExternalFile = startupFile;
+const pendingExternalFiles = [...startupFiles];
 
 function trustedSender(event) {
   return (
@@ -34,36 +35,32 @@ function focusWindow() {
 }
 
 async function deliverExternalFile() {
-  if (!rendererReady || !mainWindow || !pendingExternalFile) return;
-  const filename = pendingExternalFile;
-  const target = mainWindow;
-  const requestId = ++externalReadId;
-  let result;
+  if (deliveringExternalFiles || !rendererReady || !mainWindow) return;
+  deliveringExternalFiles = true;
   try {
-    result = { file: await readCsvFile(filename) };
-  } catch (error) {
-    const detail =
-      error.code === "ENOENT"
-        ? "The file no longer exists."
-        : ["EACCES", "EPERM"].includes(error.code)
-          ? "Check that you have permission to read it."
-          : error.message;
-    result = { error: `Could not open ${path.basename(filename)}. ${detail}` };
+    while (rendererReady && mainWindow && pendingExternalFiles.length) {
+      const target = mainWindow;
+      const requestId = externalReadId;
+      const result = await fileOpenResult(pendingExternalFiles[0]);
+      if (
+        requestId !== externalReadId ||
+        !rendererReady ||
+        target.isDestroyed() ||
+        target !== mainWindow
+      )
+        return;
+      pendingExternalFiles.shift();
+      target.webContents.send("csv:file", result);
+    }
+  } finally {
+    deliveringExternalFiles = false;
+    if (rendererReady && mainWindow && pendingExternalFiles.length)
+      void deliverExternalFile();
   }
-  if (
-    requestId !== externalReadId ||
-    !rendererReady ||
-    target.isDestroyed() ||
-    target !== mainWindow
-  )
-    return;
-  pendingExternalFile = null;
-  target.webContents.send("csv:file", result);
 }
 
 function queueExternalFile(filename) {
-  pendingExternalFile = filename;
-  externalReadId += 1;
+  pendingExternalFiles.push(filename);
   if (app.isReady() && !mainWindow) createWindow();
   focusWindow();
   void deliverExternalFile();
@@ -108,7 +105,7 @@ function createWindow() {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
   else mainWindow.loadFile(path.join(__dirname, "../dist/index.html"));
 }
-if (!app.requestSingleInstanceLock({ filePath: startupFile })) {
+if (!app.requestSingleInstanceLock({ filePaths: startupFiles })) {
   app.quit();
 } else {
   if (process.platform === "win32")
@@ -116,10 +113,10 @@ if (!app.requestSingleInstanceLock({ filePath: startupFile })) {
   app.on(
     "second-instance",
     (_event, args, workingDirectory, additionalData) => {
-      const filename =
-        additionalData?.filePath ||
-        fileFromArguments(args.slice(1), workingDirectory);
-      if (filename) queueExternalFile(filename);
+      const filenames =
+        additionalData?.filePaths ||
+        filesFromArguments(args.slice(1), workingDirectory);
+      if (filenames.length) filenames.forEach(queueExternalFile);
       else focusWindow();
     },
   );
@@ -140,14 +137,18 @@ if (!app.requestSingleInstanceLock({ filePath: startupFile })) {
     ipcMain.handle("csv:open", async (event) => {
       if (!trustedSender(event)) throw new Error("Invalid sender");
       const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
-        title: "Open CSV file",
-        properties: ["openFile"],
+        title: "Open CSV files",
+        properties: ["openFile", "multiSelections"],
         filters: [
           { name: "Delimited text files", extensions: ["csv", "tsv", "txt"] },
         ],
       });
-      if (canceled || !filePaths[0]) return null;
-      return readCsvFile(filePaths[0]);
+      if (canceled) return [];
+      // Read sequentially to avoid retaining several raw file buffers at once.
+      const results = [];
+      for (const filename of filePaths)
+        results.push(await fileOpenResult(filename));
+      return results;
     });
     if (!mainWindow) createWindow();
     app.on("activate", () => {

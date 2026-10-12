@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import {
   ArrowDown,
   ArrowUp,
@@ -18,17 +18,16 @@ import {
 } from "lucide-react";
 import { parseCsv, selectRows } from "./csv";
 import { version } from "../package.json";
-import type { Dataset, Sort } from "./csv";
+import { emptyView, emptyWorkspace, tabsReducer } from "./tabs";
+import type { CsvTab, TabView } from "./tabs";
+type FileOpenResult =
+  { file: { name: string; text: string } } | { error: string };
 declare global {
   interface Window {
     nebula?: {
-      openFile: () => Promise<{ name: string; text: string } | null>;
+      openFiles: () => Promise<FileOpenResult[]>;
       setTheme: (theme: string) => void;
-      onFileOpened: (
-        callback: (
-          result: { file: { name: string; text: string } } | { error: string },
-        ) => void,
-      ) => () => void;
+      onFileOpened: (callback: (result: FileOpenResult) => void) => () => void;
     };
   }
 }
@@ -52,62 +51,92 @@ export default function App() {
     }
     window.nebula?.setTheme(theme);
   }, [theme]);
-  const [data, setData] = useState<Dataset | null>(null);
-  const [name, setName] = useState("");
-  const [hidden, setHidden] = useState<number[]>([]);
-  const [filters, setFilters] = useState<Record<number, string>>({});
-  const [sort, setSort] = useState<Sort>(null);
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(0);
-  const [columnsOpen, setColumnsOpen] = useState(false);
+  const [workspace, dispatch] = useReducer(tabsReducer, emptyWorkspace);
+  const activeTab = workspace.tabs.find((tab) => tab.id === workspace.activeId);
+  const data = activeTab?.data ?? null;
+  const name = activeTab?.name ?? "";
+  const { hidden, filters, sort, search, page, columnsOpen } =
+    activeTab?.view ?? emptyView();
+  function updateView(view: Partial<TabView>) {
+    if (activeTab) dispatch({ type: "update", id: activeTab.id, view });
+  }
+  const setHidden = (hidden: number[]) => updateView({ hidden });
+  const setFilters = (filters: Record<number, string>) =>
+    updateView({ filters, page: 0 });
+  const setSearch = (search: string) => updateView({ search, page: 0 });
+  const setPage = (page: number) => updateView({ page });
+  const setColumnsOpen = (columnsOpen: boolean) => updateView({ columnsOpen });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [dragging, setDragging] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const tabButtons = useRef(new Map<string, HTMLButtonElement>());
+  useEffect(() => {
+    tabButtons.current
+      .get(workspace.activeId ?? "")
+      ?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [workspace.activeId]);
   function reset() {
-    setHidden([]);
-    setFilters({});
-    setSort(null);
-    setSearch("");
-    setPage(0);
+    if (activeTab) dispatch({ type: "reset", id: activeTab.id });
   }
-  function load(text: string, filename: string) {
-    try {
-      const result = parseCsv(text);
-      setData(result);
-      setName(filename);
-      reset();
-      setError("");
-      setColumnsOpen(false);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not read this CSV.");
+  function loadFiles(results: FileOpenResult[]) {
+    const tabs: CsvTab[] = [];
+    const errors: string[] = [];
+    for (const result of results) {
+      if ("error" in result) {
+        errors.push(result.error);
+        continue;
+      }
+      try {
+        tabs.push({
+          id: crypto.randomUUID(),
+          name: result.file.name,
+          data: parseCsv(result.file.text),
+          view: emptyView(),
+        });
+      } catch (e) {
+        errors.push(
+          `${result.file.name}: ${e instanceof Error ? e.message : "Could not read this CSV."}`,
+        );
+      }
     }
+    dispatch({ type: "open", tabs });
+    setError(errors.join(" "));
   }
   useEffect(
     () =>
       window.nebula?.onFileOpened((result) => {
-        if ("file" in result) load(result.file.text, result.file.name);
-        else setError(result.error);
+        loadFiles([result]);
       }),
     [],
   );
-  async function readFile(file?: File) {
-    if (!file) return;
-    if (!/\.(csv|tsv|txt)$/i.test(file.name)) {
-      setError("Choose a .csv, .tsv, or .txt file.");
-      return;
-    }
-    if (file.size > 50 * 1024 * 1024) {
-      setError(
-        "This file exceeds the 50 MB preview limit. Please choose a smaller file.",
-      );
-      return;
-    }
+  async function readFiles(files: File[]) {
+    if (!files.length) return;
     setBusy(true);
     try {
-      load(await file.text(), file.name);
-    } catch {
-      setError("The file could not be read. Please try again.");
+      const results: FileOpenResult[] = [];
+      for (const file of files) {
+        if (!/\.(csv|tsv|txt)$/i.test(file.name)) {
+          results.push({
+            error: `${file.name}: Choose a .csv, .tsv, or .txt file.`,
+          });
+        } else if (file.size > 50 * 1024 * 1024) {
+          results.push({
+            error: `${file.name}: This file exceeds the 50 MB preview limit.`,
+          });
+        } else {
+          try {
+            results.push({
+              file: { name: file.name, text: await file.text() },
+            });
+          } catch {
+            results.push({
+              error: `${file.name}: The file could not be read. Please try again.`,
+            });
+          }
+        }
+      }
+      loadFiles(results);
     } finally {
       setBusy(false);
     }
@@ -119,8 +148,8 @@ export default function App() {
     }
     setBusy(true);
     try {
-      const file = await window.nebula.openFile();
-      if (file) load(file.text, file.name);
+      const results = await window.nebula.openFiles();
+      if (results.length) loadFiles(results);
     } catch (e) {
       setError(
         e instanceof Error
@@ -134,11 +163,38 @@ export default function App() {
       setBusy(false);
     }
   }
+  function activateTab(id: string, focus = false) {
+    dispatch({ type: "activate", id });
+    if (focus) tabButtons.current.get(id)?.focus();
+  }
+  function closeTab(id: string) {
+    const next = tabsReducer(workspace, { type: "close", id });
+    dispatch({ type: "close", id });
+    if (next.activeId) tabButtons.current.get(next.activeId)?.focus();
+    else
+      requestAnimationFrame(() => document.getElementById("open-csv")?.focus());
+  }
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "o") {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      if (e.key.toLowerCase() === "o") {
         e.preventDefault();
-        void openFile();
+        if (!busy) void openFile();
+      } else if (e.key.toLowerCase() === "w" && activeTab) {
+        e.preventDefault();
+        closeTab(activeTab.id);
+      } else if (e.key === "Tab" && workspace.tabs.length) {
+        e.preventDefault();
+        const index = workspace.tabs.findIndex(
+          (tab) => tab.id === workspace.activeId,
+        );
+        activateTab(
+          workspace.tabs[
+            (index + (e.shiftKey ? -1 : 1) + workspace.tabs.length) %
+              workspace.tabs.length
+          ].id,
+          true,
+        );
       }
     };
     window.addEventListener("keydown", key);
@@ -156,19 +212,22 @@ export default function App() {
   const maxPage = Math.max(0, Math.ceil(rows.length / PAGE_SIZE) - 1);
   const currentPage = Math.min(page, maxPage);
   function toggleColumn(index: number) {
-    setHidden((old) =>
-      old.includes(index) ? old.filter((i) => i !== index) : [...old, index],
+    setHidden(
+      hidden.includes(index)
+        ? hidden.filter((i) => i !== index)
+        : [...hidden, index],
     );
   }
   function cycleSort(column: number) {
-    setSort((old) =>
-      old?.column === column
-        ? old.direction === "asc"
-          ? { column, direction: "desc" }
-          : null
-        : { column, direction: "asc" },
-    );
-    setPage(0);
+    updateView({
+      sort:
+        sort?.column === column
+          ? sort.direction === "asc"
+            ? { column, direction: "desc" }
+            : null
+          : { column, direction: "asc" },
+      page: 0,
+    });
   }
   return (
     <div
@@ -184,7 +243,7 @@ export default function App() {
       onDrop={(e) => {
         e.preventDefault();
         setDragging(false);
-        void readFile(e.dataTransfer.files[0]);
+        void readFiles(Array.from(e.dataTransfer.files));
       }}
     >
       <aside className="sidebar">
@@ -243,6 +302,7 @@ export default function App() {
               </select>
             </div>
             <button
+              id="open-csv"
               className="primary"
               onClick={() => void openFile()}
               disabled={busy}
@@ -253,15 +313,88 @@ export default function App() {
             </button>
           </div>
         </header>
-        <section className="content">
+        {workspace.tabs.length > 0 && (
+          <div className="file-tabs" role="tablist" aria-label="Open CSV files">
+            {workspace.tabs.map((tab, index) => (
+              <div
+                className={`file-tab ${tab.id === workspace.activeId ? "active" : ""}`}
+                key={tab.id}
+                role="presentation"
+              >
+                <button
+                  ref={(button) => {
+                    if (button) tabButtons.current.set(tab.id, button);
+                    else tabButtons.current.delete(tab.id);
+                  }}
+                  id={`tab-${tab.id}`}
+                  role="tab"
+                  aria-selected={tab.id === workspace.activeId}
+                  aria-controls={`panel-${tab.id}`}
+                  tabIndex={tab.id === workspace.activeId ? 0 : -1}
+                  className="file-tab-label"
+                  title={tab.name}
+                  onClick={() => activateTab(tab.id)}
+                  onKeyDown={(e) => {
+                    let target = index;
+                    if (e.key === "ArrowRight")
+                      target = (index + 1) % workspace.tabs.length;
+                    else if (e.key === "ArrowLeft")
+                      target =
+                        (index - 1 + workspace.tabs.length) %
+                        workspace.tabs.length;
+                    else if (e.key === "Home") target = 0;
+                    else if (e.key === "End")
+                      target = workspace.tabs.length - 1;
+                    else if (e.key === "Delete") {
+                      e.preventDefault();
+                      closeTab(tab.id);
+                      return;
+                    } else return;
+                    e.preventDefault();
+                    activateTab(workspace.tabs[target].id, true);
+                  }}
+                >
+                  <FileSpreadsheet size={16} aria-hidden="true" />
+                  <span>{tab.name}</span>
+                </button>
+                <button
+                  className="close-tab"
+                  aria-label={`Close ${tab.name}`}
+                  title="Close tab (Ctrl+W)"
+                  onClick={() => closeTab(tab.id)}
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        {workspace.tabs
+          .filter((tab) => tab.id !== workspace.activeId)
+          .map((tab) => (
+            <section
+              key={tab.id}
+              id={`panel-${tab.id}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${tab.id}`}
+              hidden
+            />
+          ))}
+        <section
+          className="content"
+          role={activeTab ? "tabpanel" : undefined}
+          id={activeTab ? `panel-${activeTab.id}` : undefined}
+          aria-labelledby={activeTab ? `tab-${activeTab.id}` : undefined}
+        >
           <input
             ref={fileInput}
             type="file"
             accept=".csv,.tsv,.txt"
+            multiple
             className="hidden"
             aria-label="Choose CSV file"
             onChange={(e) => {
-              void readFile(e.target.files?.[0]);
+              void readFiles(Array.from(e.target.files ?? []));
               e.target.value = "";
             }}
           />
@@ -284,7 +417,7 @@ export default function App() {
               <span className="eyebrow">FROM RAW DATA TO REAL INSIGHT</span>
               <h2>Meet your next clear view.</h2>
               <p>
-                Drop a CSV file here to get started.
+                Drop CSV files here to get started.
                 <br />
                 Sort, filter, and focus on the columns you need.
               </p>
@@ -293,7 +426,11 @@ export default function App() {
               </button>
               <button
                 className="sample-link"
-                onClick={() => load(sample, "team-overview.csv")}
+                onClick={() =>
+                  loadFiles([
+                    { file: { text: sample, name: "team-overview.csv" } },
+                  ])
+                }
               >
                 Or explore a sample file <ChevronRight size={14} />
               </button>
@@ -573,7 +710,7 @@ export default function App() {
       {dragging && (
         <div className="drop-overlay">
           <Upload size={44} />
-          <h2>Drop your CSV here</h2>
+          <h2>Drop your CSV files here</h2>
         </div>
       )}
     </div>
