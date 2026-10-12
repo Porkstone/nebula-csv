@@ -58,6 +58,8 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Computer-use confirmed the header placement in the empty and sample CSV views.
 - Clicking the header action opened the native file picker; cancellation restored the button correctly.
 - Verified the table, pagination, and footer at the default window size after removing the separate action row.
+- Windows packaging and the local Chocolatey upgrade to 1.0.3 succeeded with checksum verification. Computer-use confirmed the header action in the installed app.
+- GitHub release 1.0.3 is published and CI passed. Community Chocolatey publication remains blocked by HTTP 403.
 
 ## Scope and limitations
 
