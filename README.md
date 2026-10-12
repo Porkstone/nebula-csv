@@ -12,7 +12,7 @@ A local Electron desktop app for exploring CSV files. No account, backend, telem
 - Combine case-insensitive substring filters on individual columns with search across every cell.
 - Reset the view without changing the original file. Hidden-column filters remain active.
 - Automatic delimiter detection, quoted and multiline fields, UTF-8 BOM support, and warnings for irregular rows.
-- 100-row pages, sticky headings, and a 50 MB input limit.
+- 100-row pages, sticky headings, and a 50 MB limit per file.
 - Light, Dark, and System appearance modes with a saved preference, using the Nebula Applications brand guide (edition 1.1).
 
 The first nonempty row is treated as the header. Text files should use UTF-8. Parsing and filtering occur in memory; the app is intended for previews, not very large datasets. Dates sort as text. Files are read-only.

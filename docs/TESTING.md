@@ -80,6 +80,8 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - The native multi-select picker appended `qa.csv` and `pagination.csv` together. Duplicate filenames remained independently usable.
 - Pagination remained on page 2 after switching away and back. Closing a background tab preserved the active preview; Ctrl+W selected an adjacent tab and closing the final tab returned to the empty view.
 - Windows NSIS packaging and machine-wide installation passed. Computer-use verified Explorer **Open with → nebula-csv** cold launch and a second Explorer file opening as a new tab in the same installed window, preserving the original preview.
+- Computer-use verified the final installed pagination layout with the tab strip, pagination controls, hint, and footer visible. GitHub release 1.0.5 and CI passed; local Chocolatey upgrade downloaded the published installer, verified SHA-256, and succeeded. CSV defaults remained unchanged.
+- Community Chocolatey submission of 1.0.5 returned HTTP 403. The recurring monitor tracks the latest package and the tab requirements.
 
 ## Scope and limitations
 
