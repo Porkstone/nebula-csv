@@ -69,6 +69,8 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Computer-use verified the Windows 11 **Open with → nebula-csv** submenu. Selecting it with the app closed opened `test-data/Open with sample.csv`, including its filename with spaces, and displayed both records correctly.
 - Computer-use verified **Show more options → Open with nebula-csv**. Selecting it for `qa.csv` while the viewer was running loaded its four records into the same window; exactly one viewer window remained.
 - Development Electron launches also passed filename-with-spaces and second-instance handoff checks.
+- GitHub release 1.0.4 is published and CI passed. Local Chocolatey upgrade to 1.0.4 downloaded the published installer, verified SHA-256, and succeeded; the installed app loaded the spaced filename correctly. Registry commands and unchanged CSV defaults were checked again after upgrade.
+- The 1.0.4 community Chocolatey submission returned HTTP 403. The monitoring task now tracks this release and preserves the Explorer integration requirements.
 
 ## Scope and limitations
 
