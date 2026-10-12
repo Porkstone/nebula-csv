@@ -4,7 +4,7 @@ Tested on Windows on 12 October 2026.
 
 ## Automated checks
 
-`pnpm test`: 7 tests passed. Covers UTF-8 BOM, quoted commas, escaped quotes, multiline fields, tabs, semicolons, irregular rows, duplicate headers, empty input, header-only input, numeric sorting, source preservation, combined case-insensitive filters, and restoration of original order.
+`pnpm test`: 15 tests passed (7 CSV/view tests and 8 Electron file tests). Covers UTF-8 BOM, quoted commas, escaped quotes, multiline fields, tabs, semicolons, irregular rows, duplicate headers, empty input, header-only input, numeric sorting, source preservation, combined case-insensitive filters, restoration of original order, file arguments with spaces/Unicode, launching directories, extension validation, UTF-8 reads, missing files, directories, and the 50 MB limit.
 
 `pnpm build`: TypeScript and Vite production build passed.
 
@@ -60,6 +60,15 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Verified the table, pagination, and footer at the default window size after removing the separate action row.
 - Windows packaging and the local Chocolatey upgrade to 1.0.3 succeeded with checksum verification. Computer-use confirmed the header action in the installed app.
 - GitHub release 1.0.3 is published and CI passed. Community Chocolatey publication remains blocked by HTTP 403.
+
+## Version 1.0.4 Windows Explorer integration
+
+- Automated tests, TypeScript build, and Windows x64 NSIS packaging passed.
+- Installed 1.0.4 machine-wide with exit code 0. Confirmed quoted executable and file arguments in all registered open commands and the `nebula-csv` application label.
+- Compared the machine/user CSV default values and Explorer UserChoice before and after installation; all remained unchanged.
+- Computer-use verified the Windows 11 **Open with → nebula-csv** submenu. Selecting it with the app closed opened `test-data/Open with sample.csv`, including its filename with spaces, and displayed both records correctly.
+- Computer-use verified **Show more options → Open with nebula-csv**. Selecting it for `qa.csv` while the viewer was running loaded its four records into the same window; exactly one viewer window remained.
+- Development Electron launches also passed filename-with-spaces and second-instance handoff checks.
 
 ## Scope and limitations
 

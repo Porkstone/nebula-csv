@@ -24,6 +24,11 @@ declare global {
     nebula?: {
       openFile: () => Promise<{ name: string; text: string } | null>;
       setTheme: (theme: string) => void;
+      onFileOpened: (
+        callback: (
+          result: { file: { name: string; text: string } } | { error: string },
+        ) => void,
+      ) => () => void;
     };
   }
 }
@@ -78,6 +83,14 @@ export default function App() {
       setError(e instanceof Error ? e.message : "Could not read this CSV.");
     }
   }
+  useEffect(
+    () =>
+      window.nebula?.onFileOpened((result) => {
+        if ("file" in result) load(result.file.text, result.file.name);
+        else setError(result.error);
+      }),
+    [],
+  );
   async function readFile(file?: File) {
     if (!file) return;
     if (!/\.(csv|tsv|txt)$/i.test(file.name)) {

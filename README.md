@@ -5,6 +5,7 @@ A local Electron desktop app for exploring CSV files. No account, backend, telem
 ## Features
 
 - Open CSV, TSV, and delimited text through the Windows file picker, drag and drop, or Ctrl+O.
+- Open CSV files from Windows Explorer using **Open with → nebula-csv**, including when the viewer is already running.
 - Hide and restore columns using the Columns panel.
 - Click headings to cycle through ascending, descending, and original row order. Numeric values sort numerically.
 - Combine case-insensitive substring filters on individual columns with search across every cell.
@@ -43,8 +44,10 @@ Chocolatey package ID: `nebula-csv`; display name: **Nebula CSV Viewer**.
 
 Download the [Windows installer](https://github.com/porkstone/nebula-csv/releases/latest). Once the [Chocolatey package](https://community.chocolatey.org/packages/nebula-csv) is approved, install with `choco install nebula-csv`.
 
+After installation, right-click a `.csv` file and select **Open with → nebula-csv**. Windows 11 also offers **Show more options → Open with nebula-csv**. Opening another file brings the existing viewer forward and replaces its preview. The installer leaves your default CSV application unchanged; uninstalling removes Nebula's menu entries.
+
 The `chocolatey/` directory contains the package metadata and installation script. The installer URL is versioned and verified using SHA-256. Publishing credentials must be supplied separately and must never be committed.
 
 ## Security
 
-Electron uses a sandboxed renderer, context isolation, disabled Node integration, a restrictive content security policy, and a narrow preload API exposing only a native file picker. Cell contents render as text, never HTML. New windows, renderer navigation, and permission requests are denied.
+Electron uses a sandboxed renderer, context isolation, disabled Node integration, a restrictive content security policy, and a narrow preload API for the native file picker, file-open events, and appearance preference. Cell contents render as text, never HTML. New windows, renderer navigation, and permission requests are denied.
