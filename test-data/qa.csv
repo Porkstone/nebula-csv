@@ -1,0 +1,6 @@
+Name,City,Amount,Notes
+Zoe,London,10,"Hello, world"
+Amy,Bristol,2,"A ""quoted"" value"
+Ava,London,-1.5,"Two
+lines"
+Max,London,2,<script>alert('unsafe')</script>
