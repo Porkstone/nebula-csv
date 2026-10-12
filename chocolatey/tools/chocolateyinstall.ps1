@@ -3,8 +3,8 @@ if (Get-OSArchitectureWidth -Compare 32) { throw 'Nebula CSV Viewer requires 64-
 $packageArgs = @{
   packageName    = 'nebula-csv'
   fileType       = 'exe'
-  url64bit       = 'https://github.com/porkstone/nebula-csv/releases/download/v1.0.1/nebula-csv-viewer.exe'
-  checksum64     = '7BD8EB99C656C2E054F1B2E768C426E8502CFABFF6F155947D588F3C7B32AE98'
+  url64bit       = 'https://github.com/porkstone/nebula-csv/releases/download/v1.0.2/nebula-csv-viewer.exe'
+  checksum64     = '025829DFB3B97C1847D1DC88065DE89FC87671C19FBC2DBA4BB525D5CFCD89AF'
   checksumType64 = 'sha256'
   silentArgs     = '/S /allusers'
   validExitCodes = @(0, 1641, 3010)

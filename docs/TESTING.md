@@ -44,6 +44,12 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Computer-use confirmed that the upgraded application launches from Program Files and displays version 1.0.1.
 - GitHub release 1.0.1 is published. Chocolatey rejected the 1.0.1 community submission with HTTP 403, including through the official push command; community publication remains pending resolution of that rejection.
 
+## Version 1.0.2 introductory section removal
+
+- Production build and Windows installer packaging passed.
+- Computer-use confirmed removal of the Local workspace overline, CSV preview title, and introductory description in the empty view and sample CSV view.
+- Verified that Open CSV remains available and that the table, pagination controls, and footer fit cleanly at the default window size.
+
 ## Scope and limitations
 
 Windows x64 is the release target. macOS and Linux installers have not been tested. The native Windows file picker may retain the Windows shell appearance even when the application uses Dark mode. The app does not claim full WCAG certification. The installer is unsigned. Parsing and filtering are in memory, with a 50 MB input limit; maximum-size performance is not benchmarked.

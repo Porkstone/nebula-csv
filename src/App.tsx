@@ -230,12 +230,7 @@ export default function App() {
           </div>
         </header>
         <section className="content">
-          <div className="page-heading">
-            <div>
-              <div className="eyebrow">LOCAL WORKSPACE</div>
-              <h1>CSV preview</h1>
-              <p>Sort, filter, and focus on the columns you need.</p>
-            </div>
+          <div className="file-actions">
             <button
               className="primary"
               onClick={() => void openFile()}
