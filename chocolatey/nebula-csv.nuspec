@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>nebula-csv</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <title>Nebula CSV Viewer</title>
     <authors>Porkstone</authors>
     <owners>Porkstone</owners>
@@ -15,7 +15,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Preview local CSV files with column hiding, sorting, and filtering.</summary>
     <description>Nebula CSV Viewer is a local, read-only Electron desktop application for CSV and TSV files. Hide and restore columns, sort text and numeric values, combine per-column filters with global search, and browse paginated results. Includes Light, Dark, and System appearance modes. No sign-in, backend, or file uploads. Supports UTF-8 delimited files up to 50 MB. Requires 64-bit Windows 10 or later.</description>
-    <releaseNotes>https://github.com/porkstone/nebula-csv/releases/tag/v1.0.2</releaseNotes>
+    <releaseNotes>https://github.com/porkstone/nebula-csv/releases/tag/v1.0.3</releaseNotes>
     <tags>csv tsv viewer electron nebula filter sort desktop</tags>
   </metadata>
   <files>

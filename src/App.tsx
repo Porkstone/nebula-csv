@@ -216,21 +216,19 @@ export default function App() {
           <div className="breadcrumb">
             Workspace <span>/</span> <strong>File preview</strong>
           </div>
-          <div className="theme-control">
-            <label htmlFor="theme">Appearance</label>
-            <select
-              id="theme"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value)}
-            >
-              <option value="system">System</option>
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-            </select>
-          </div>
-        </header>
-        <section className="content">
-          <div className="file-actions">
+          <div className="header-actions">
+            <div className="theme-control">
+              <label htmlFor="theme">Appearance</label>
+              <select
+                id="theme"
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+              >
+                <option value="system">System</option>
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+              </select>
+            </div>
             <button
               className="primary"
               onClick={() => void openFile()}
@@ -241,6 +239,8 @@ export default function App() {
               <kbd>Ctrl O</kbd>
             </button>
           </div>
+        </header>
+        <section className="content">
           <input
             ref={fileInput}
             type="file"

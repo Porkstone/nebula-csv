@@ -52,6 +52,13 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Local Chocolatey upgrade to 1.0.2 succeeded with a verified installer checksum. Computer-use confirmed the introductory section is absent from the installed application.
 - GitHub release 1.0.2 is published and CI passed. Community Chocolatey submission still returns HTTP 403.
 
+## Version 1.0.3 header action
+
+- Production build passed with Open CSV moved into the header beside Appearance.
+- Computer-use confirmed the header placement in the empty and sample CSV views.
+- Clicking the header action opened the native file picker; cancellation restored the button correctly.
+- Verified the table, pagination, and footer at the default window size after removing the separate action row.
+
 ## Scope and limitations
 
 Windows x64 is the release target. macOS and Linux installers have not been tested. The native Windows file picker may retain the Windows shell appearance even when the application uses Dark mode. The app does not claim full WCAG certification. The installer is unsigned. Parsing and filtering are in memory, with a 50 MB input limit; maximum-size performance is not benchmarked.

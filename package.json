@@ -1,7 +1,7 @@
 {
   "name": "nebula-csv",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "electron/main.cjs",
   "description": "A private, local CSV viewer with column visibility, sorting and filtering",
   "author": "Porkstone",
