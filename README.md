@@ -41,6 +41,8 @@ GitHub: https://github.com/porkstone/nebula-csv
 
 Chocolatey package ID: `nebula-csv`; display name: **Nebula CSV Viewer**.
 
+Download the [Windows installer](https://github.com/porkstone/nebula-csv/releases/latest). Once the [Chocolatey package](https://community.chocolatey.org/packages/nebula-csv) is approved, install with `choco install nebula-csv`.
+
 The `chocolatey/` directory contains the package metadata and installation script. The installer URL is versioned and verified using SHA-256. Publishing credentials must be supplied separately and must never be committed.
 
 ## Security

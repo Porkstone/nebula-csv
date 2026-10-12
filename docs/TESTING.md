@@ -26,6 +26,14 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Verified pages 1–100, 101–200, and 201–205, including the disabled final Next control.
 - Verified the bundled sample and revised table sizing at the default window size.
 
+## Release checks
+
+- Windows x64 NSIS installer built successfully and completed a silent machine-wide installation with exit code 0.
+- Launched the installed application from Program Files and inspected it with computer-use.
+- Installed the generated Chocolatey package locally; it downloaded the published GitHub installer, verified SHA-256, and installed successfully (1/1 packages).
+- GitHub Actions validation passed.
+- Chocolatey accepted version 1.0.0 with HTTP 201; public listing awaits moderation and approval.
+
 ## Scope and limitations
 
 Windows x64 is the release target. macOS and Linux installers have not been tested. The native Windows file picker may retain the Windows shell appearance even when the application uses Dark mode. The app does not claim full WCAG certification. The installer is unsigned. Parsing and filtering are in memory, with a 50 MB input limit; maximum-size performance is not benchmarked.
