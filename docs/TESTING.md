@@ -34,13 +34,15 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - GitHub Actions validation passed.
 - Chocolatey accepted version 1.0.0 with HTTP 201; public listing awaits moderation and approval.
 
-## Scope and limitations
-
 ## Version 1.0.1 executable rename
 
 - TypeScript and production build passed with the version read from package metadata.
 - Built the Windows app and installer with the filename `nebula-csv-viewer.exe`.
 - Computer-use confirmed that the renamed packaged application launches, displays version 1.0.1, and previews the bundled CSV sample.
+- The local Chocolatey upgrade from 1.0.0 to 1.0.1 downloaded the renamed GitHub installer, verified SHA-256, and succeeded.
+- Verified the installed `nebula-csv-viewer.exe`, removal of the old application executable, and correct Desktop and Start Menu shortcut targets.
+- Computer-use confirmed that the upgraded application launches from Program Files and displays version 1.0.1.
+- GitHub release 1.0.1 is published. Chocolatey rejected the 1.0.1 community submission with HTTP 403, including through the official push command; community publication remains pending resolution of that rejection.
 
 ## Scope and limitations
 
