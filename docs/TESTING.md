@@ -83,6 +83,14 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Computer-use verified the final installed pagination layout with the tab strip, pagination controls, hint, and footer visible. GitHub release 1.0.5 and CI passed; local Chocolatey upgrade downloaded the published installer, verified SHA-256, and succeeded. CSV defaults remained unchanged.
 - Community Chocolatey submission of 1.0.5 returned HTTP 403. The recurring monitor tracks the latest package and the tab requirements.
 
+## Chocolatey review update — 13 October 2026
+
+- Community version 1.0.0 passed validation, installation/uninstallation verification on Windows Server 2019, and automated virus scanning. Its status is Ready for human review; it is not yet approved.
+- Reviewed the public verification log: download checksum verification, installation, and uninstallation succeeded with exit code 0.
+- Addressed the validator's icon guideline in the latest, unpublished 1.0.5 package metadata using the existing 256px SVG through a version-pinned jsDelivr URL. HTTP 200 and image/svg+xml were verified; the packed nuspec contains the icon URL and retains the existing installer checksum.
+- Confirmed the project source URL points to the application's source repository and Porkstone is both its owner and software author, matching the other review notes.
+- This metadata-only revision does not change the application or published installer. The original release package remains available; the revised package is provided as `nebula-csv.1.0.5-metadata1.nupkg`.
+
 ## Scope and limitations
 
 Windows x64 is the release target. macOS and Linux installers have not been tested. The native Windows file picker may retain the Windows shell appearance even when the application uses Dark mode. The app does not claim full WCAG certification. The installer is unsigned. Parsing and filtering are in memory, with a 50 MB input limit; maximum-size performance is not benchmarked.

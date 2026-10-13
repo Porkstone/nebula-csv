@@ -4,6 +4,7 @@
     <id>nebula-csv</id>
     <version>1.0.5</version>
     <title>Nebula CSV Viewer</title>
+    <iconUrl>https://cdn.jsdelivr.net/gh/Porkstone/nebula-csv@v1.0.5/build/icon.svg</iconUrl>
     <authors>Porkstone</authors>
     <owners>Porkstone</owners>
     <projectUrl>https://github.com/porkstone/nebula-csv</projectUrl>
