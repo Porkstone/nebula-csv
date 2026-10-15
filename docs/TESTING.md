@@ -91,6 +91,12 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Confirmed the project source URL points to the application's source repository and Porkstone is both its owner and software author, matching the other review notes.
 - This metadata-only revision does not change the application or published installer. The original release package remains available; the revised package is provided as `nebula-csv.1.0.5-metadata1.nupkg`.
 
+## Chocolatey approval and latest submission — 15 October 2026
+
+- Version 1.0.0 was approved by virtualex at 16:11:19 UTC, with validation/verification Passing and scan NotFlagged.
+- The official Chocolatey push of the icon-corrected 1.0.5 package succeeded at 20:08 UTC. Exact-version OData and the public package page confirm Submitted/Pending; validation, verification and scanning are pending. The published metadata contains the corrected CDN icon URL.
+- The recurring monitor now tracks accepted version 1.0.5 through review. No further resubmission is needed unless actionable feedback requires a package revision. Original installer assets remain unchanged.
+
 ## Scope and limitations
 
 Windows x64 is the release target. macOS and Linux installers have not been tested. The native Windows file picker may retain the Windows shell appearance even when the application uses Dark mode. The app does not claim full WCAG certification. The installer is unsigned. Parsing and filtering are in memory, with a 50 MB input limit; maximum-size performance is not benchmarked.
