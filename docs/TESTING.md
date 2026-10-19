@@ -97,6 +97,12 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - The official Chocolatey push of the icon-corrected 1.0.5 package succeeded at 20:08 UTC. Exact-version OData and the public package page confirm Submitted/Pending; validation, verification and scanning are pending. The published metadata contains the corrected CDN icon URL.
 - The recurring monitor now tracks accepted version 1.0.5 through review. No further resubmission is needed unless actionable feedback requires a package revision. Original installer assets remain unchanged.
 
+## Chocolatey 1.0.5 approval — 19 October 2026
+
+- Exact-version OData and the [public package page](https://community.chocolatey.org/packages/nebula-csv/1.0.5) confirm version 1.0.5 was approved by virtualex at 03:31:40.987 UTC.
+- Validation and verification are Passing; scan status is NotFlagged. The [verification log](https://gist.github.com/choco-bot/c620e69de45040bf53f4a5ca332df349) confirms successful installation and uninstallation on Windows Server 2019.
+- No new actionable feedback or open GitHub issues were found. The approved package, installer assets, checksums, and versioned URLs were not changed or resubmitted. Monitoring continues after approval.
+
 ## Scope and limitations
 
 Windows x64 is the release target. macOS and Linux installers have not been tested. The native Windows file picker may retain the Windows shell appearance even when the application uses Dark mode. The app does not claim full WCAG certification. The installer is unsigned. Parsing and filtering are in memory, with a 50 MB input limit; maximum-size performance is not benchmarked.

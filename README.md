@@ -43,7 +43,7 @@ GitHub: https://github.com/porkstone/nebula-csv
 
 Chocolatey package ID: `nebula-csv`; display name: **Nebula CSV Viewer**.
 
-Download the [latest Windows installer](https://github.com/porkstone/nebula-csv/releases/latest), or install the latest approved [Chocolatey package](https://community.chocolatey.org/packages/nebula-csv) with `choco install nebula-csv`. Chocolatey version 1.0.0 was approved on 15 October 2026; version 1.0.5 has been submitted and awaits review. GitHub provides the latest application while that review is pending.
+Download the [latest Windows installer](https://github.com/porkstone/nebula-csv/releases/latest), or install the latest approved [Chocolatey package](https://community.chocolatey.org/packages/nebula-csv) with `choco install nebula-csv`. Chocolatey version 1.0.5 was approved on 19 October 2026, with validation, installation/uninstallation verification, and automated virus scanning passed. Existing Chocolatey users can update with `choco upgrade nebula-csv`.
 
 After installation, right-click a `.csv` file and select **Open with → nebula-csv**. Windows 11 also offers **Show more options → Open with nebula-csv**. Opening another file brings the existing viewer forward and adds a tab, preserving the other previews. Select several files in Open CSV or drop them together to create several tabs. Tabs last for the current session; closing a tab never changes its source file. The installer leaves your default CSV application unchanged; uninstalling removes Nebula's menu entries.
 
