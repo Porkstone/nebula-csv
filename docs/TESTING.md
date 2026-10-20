@@ -103,6 +103,12 @@ Tested the actual Electron app using the computer-use plugin and Windows input, 
 - Validation and verification are Passing; scan status is NotFlagged. The [verification log](https://gist.github.com/choco-bot/c620e69de45040bf53f4a5ca332df349) confirms successful installation and uninstallation on Windows Server 2019.
 - No new actionable feedback or open GitHub issues were found. The approved package, installer assets, checksums, and versioned URLs were not changed or resubmitted. Monitoring continues after approval.
 
+## Next-release Chocolatey metadata — 20 October 2026
+
+- The approval note from virtualex requests a `copyright` element for the next release and explicitly says not to resubmit 1.0.5. Added `Copyright (c) 2026 Porkstone` to the source nuspec, matching `LICENSE`.
+- This is preparation for the next release, which must use a new version. The approved 1.0.5 package, existing local release package, installer, checksum, and published assets remain unchanged.
+- Verified Chocolatey's copyright guidance and packed a test-only prerelease in an isolated temporary directory. Its nuspec contains the copyright and unchanged CDN icon URL; SHA-256 checks confirm the existing installer and approved package are unchanged. No package was submitted.
+
 ## Scope and limitations
 
 Windows x64 is the release target. macOS and Linux installers have not been tested. The native Windows file picker may retain the Windows shell appearance even when the application uses Dark mode. The app does not claim full WCAG certification. The installer is unsigned. Parsing and filtering are in memory, with a 50 MB input limit; maximum-size performance is not benchmarked.

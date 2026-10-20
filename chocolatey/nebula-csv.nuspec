@@ -7,6 +7,7 @@
     <iconUrl>https://cdn.jsdelivr.net/gh/Porkstone/nebula-csv@v1.0.5/build/icon.svg</iconUrl>
     <authors>Porkstone</authors>
     <owners>Porkstone</owners>
+    <copyright>Copyright (c) 2026 Porkstone</copyright>
     <projectUrl>https://github.com/porkstone/nebula-csv</projectUrl>
     <packageSourceUrl>https://github.com/porkstone/nebula-csv/tree/main/chocolatey</packageSourceUrl>
     <projectSourceUrl>https://github.com/porkstone/nebula-csv</projectSourceUrl>
